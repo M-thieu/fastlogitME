@@ -1,0 +1,10 @@
+Package: fastlogitME
+Type: Package
+Title: Basic Marginal Effects for Logit Models
+Version: 0.1.0
+Author: Mathieu Steijn
+Maintainer: Mathieu Steijn <m.p.a.steijn@uu.nl>
+Description: Calculates marginal effects based on logistic model objects such as "glm" or "speed.glm" at the average (default) or at given values indicated by \emph{at}. It also returns confidence intervals for said marginal effects and the p-values, which can easily be inputed in stargazer. The function only returns the essentials and is therefore much faster but not as detailed as other functions available to calculate marginal effects. As a result, it is highly suitable for large datasets.
+License: GPL
+Encoding: UTF-8
+LazyData: true
