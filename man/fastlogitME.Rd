@@ -6,7 +6,7 @@
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Calculates marginal effects based on logistic model objects such as "glm" or "speed.glm" at the average (default) or at given values indicated by \emph{at}. It also returns confidence intervals for said marginal effects and the p-values, which can easily be inputed in stargazer. The function only returns the essentials and is therefore much faster but not as detailed as other functions available to calculate marginal effects. As a result, it is highly suitable for large datasets for which other packages may require too much time or calculating power.
+Calculates marginal effects based on logistic model objects such as "glm" or "speedglm" at the average (default) or at given values indicated by \emph{at}. It also returns confidence intervals for said marginal effects and the p-values, which can easily be inputed in stargazer. The function only returns the essentials and is therefore much faster but not as detailed as other functions available to calculate marginal effects. As a result, it is highly suitable for large datasets for which other packages may require too much time or calculating power.
 }
 \usage{
 fastlogitME(model, at = NULL, vars = NULL, conf.band = .95)
@@ -14,7 +14,7 @@ fastlogitME(model, at = NULL, vars = NULL, conf.band = .95)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{model}{
-  a model object of the type "glm" or "speed.glm" where the family argument is specified to be binomial('logit')
+  a model object of the type "glm" or "speedglm" where the family argument is specified to be binomial('logit')
 }
 \item{at}{
 A list containing names of variables and specific values at which to calculate the marginal effects. The default is to calculate these at the mean of each continuous variable and for the reference category of dummy variables.
@@ -28,7 +28,7 @@ The bandwidth of the confidence interval has to be between 0 and 1. The default 
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-This function is a fast but basic alternative to other packages destinated to calculating marginal effects for logit models. It is particularly helpful when working with large datasets, where other options may take too much time and/or CPU for some uses. It is also compatible with speed.glm, which also achieves time gains compared to glm.
+This function is a fast but basic alternative to other packages destinated to calculating marginal effects for logit models. It is particularly helpful when working with large datasets, where other options may take too much time and/or CPU for some uses. It is also compatible with speedglm, which also achieves time gains compared to glm.
 
 The function calculates confidence intervals rather than standard errors because there is not a single standard error in terms of probabilities in a logit model. The standard error is given in log odds and therefore its size is different when converting to probabilities depending on how close to 0\% or 100\% it gets. As a result, a standard error in terms of probabilities, commonly derived from bootstrapping or the delta method, may exceed the range of 0\% to 100\% when estimating the probability of \dQuote{succes} at certain values in the dataset.
 
@@ -43,22 +43,22 @@ A data.frame containg the name of the variable, the marginal effect, the upper b
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-\references{
+%\references{
 %% ~put references to the literature/web site here ~
-}
+%}
 \author{
 %%  ~~who you are~~
 Mathieu Steijn \email{m.p.a.steijn@uu.nl}
 }
-\note{
+%\note{
 %%  ~~further notes~~
-}
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
+%\seealso{
 %% ~~objects to See Also as \code{\link{help}}, ~~~
-}
+%}
 \examples{
 # simulate some data
 set.seed(12345)
