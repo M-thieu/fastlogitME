@@ -6,8 +6,7 @@
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Calculates marginal effects based on logistic model objects such as "glm" or "speedglm" at the average (default) or at given values indicated by \emph{at}. It also returns confidence intervals for said marginal effects and the p-values, which can easily be used as input in stargazer. The function only returns the essentials and is therefore much faster but not as detailed as other functions available to calculate marginal effects. As a result, it is highly suitable for large datasets for which other packages may require too much time or calculating power.
-}
+Calculates marginal effects based on logistic model objects such as 'glm' or 'speedglm' at the average (default) or at given values using finite differences. It also returns confidence intervals for said marginal effects and the p-values, which can easily be used as input in stargazer. The function only returns the essentials and is therefore much faster but not as detailed as other functions available to calculate marginal effects. As a result, it is highly suitable for large datasets for which other packages may require too much time or calculating power.}
 \usage{
 fastlogitME(model, at = NULL, vars = NULL, conf.band = .95)
 }
@@ -30,7 +29,7 @@ The bandwidth of the confidence interval has to be between 0 and 1. The default 
 %%  ~~ If necessary, more details than the description above ~~
 This function is a fast but basic alternative to other packages destinated to calculating marginal effects for logit models. It is particularly helpful when working with large datasets, where other options may take too much time and/or CPU for some uses. It is also compatible with speedglm, which also achieves time gains compared to glm.
 
-The function calculates confidence intervals rather than standard errors because there is not a single standard error in terms of probabilities in a logit model. The standard error is given in log odds and therefore its size is different when converting to probabilities depending on how close to 0\% or 100\% it gets. As a result, a standard error in terms of probabilities, commonly derived from bootstrapping or the delta method, may exceed the range of 0\% to 100\% when estimating the probability of \dQuote{succes} at certain values in the dataset.
+The function calculates confidence intervals on the scale of the link function (log odds) before converting it to probabilities (the response scale) rather than standard errors on the response scale because the size of the response (probabilities) may vary depending on the position on the underlying scale of the link function. As a result, a standard error in terms of probabilities, commonly derived from bootstrapping or the delta method, may exceed the range of 0\% to 100\% when estimating the probability of "succes" at certain values in the dataset, see the references for more information.
 
 The results can easily be exported using stargazer. First one needs to use rbind to add a row of zeros as first row to the data.frame resulting from fastlogitME, this replaces the intercept stargazer is expecting to find.Use the logit model stated at the model argument of the function as input for stargazer. Replace the coefficients of this model by those in the column ME using the coef argument of stargazer. Set ci = TRUE to display confidence intervals instead of standard errors. Specify these confidence intervals using the columns Conflower and Confupper and the ci.custom argument of stargazer. Specify omit = "Constant" so the intercept is not reported.
 3.
@@ -43,16 +42,11 @@ A data.frame containg the name of the variable, the marginal effect, the upper b
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
 }
-%\references{
-%% ~put references to the literature/web site here ~
-%}
+
 \author{
 %%  ~~who you are~~
 Mathieu Steijn \email{m.p.a.steijn@uu.nl}
 }
-%\note{
-%%  ~~further notes~~
-%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
@@ -74,6 +68,28 @@ fastlogitME(a)
 fastlogitME(a, at = list("x" = 1.2, "z" = 1, "catcat2" = 1), vars = c("x"), conf.band = .99)
 
 
+}
+
+\note{
+It is advisable to consider if a logistic regression is the best option in your specific case, see the sources under references for more information.
+}
+
+\references{
+Allison, P. (2012). Logistic Regression for Rare Events [Blog post].
+
+Buteikis, A. (2020) Practical Econometrics and Data Science. Vilnius University
+
+Cameron, A. C., & Trivedi, P. K. (2010). Microeconometrics using Stata (revised ed.). Number musr in Stata Press books. StataCorp LP.
+
+Hellevik, O. (2009). Linear versus logistic regression when the dependent variable is a dichotomy.
+Quality & Quantity, 43(1):59{74.
+
+King, G. and Zeng, L. (2001). Logistic Regression in Rare Events Data. Political Analysis,
+9(02):137-163.
+
+Simpson, G. (2018) Confidence intervals for GLMs [Blog post].
+
+Wooldridge, J. M. (2002). Introductory Econometrics: A Modern Approach, 2003. New York: South-Western College Publishing.
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
