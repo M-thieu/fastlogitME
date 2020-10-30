@@ -82,7 +82,7 @@ Buteikis, A. (2020) Practical Econometrics and Data Science. Vilnius University
 Cameron, A. C., & Trivedi, P. K. (2010). Microeconometrics using Stata (revised ed.). Number musr in Stata Press books. StataCorp LP.
 
 Hellevik, O. (2009). Linear versus logistic regression when the dependent variable is a dichotomy.
-Quality & Quantity, 43(1):59{74.
+Quality & Quantity, 43(1):59-74.
 
 King, G. and Zeng, L. (2001). Logistic Regression in Rare Events Data. Political Analysis,
 9(02):137-163.
