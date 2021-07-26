@@ -74,6 +74,9 @@ fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
       }
     }
   }
+#Als de gebruiker een subset van de data gebruikt waardoor sommige levels van factors niet meer aanwezig zijn dan zorgen de volgende twee commandos ervoor dat alleen de juiste variabelen worden meegenomen.
+    vars<-vars[vars%in%names(model$coef)]
+    base<-base[names(base)%in%c("Intercept",names(model$coef))]
   fit=as.matrix(base)%*%model$coef
   Results<-data.frame("Variable" = vars, "ME" = 0, "Confupper" = 0, "Conflower" = 0, "p" = 0)
   for(var in vars){
