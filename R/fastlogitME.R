@@ -1,9 +1,13 @@
 fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
   if(!(conf.band>0&conf.band<1)){
-    stop("The bandwidth of the confidence interval should be between 0 and 1")
+    stop("The bandwidth of the confidence interval should be between 0 and 1.")
   }
+
   dataframe<-model.frame(model)
-  
+  if(!is.null(vars)&(any(!(vars%in%names(dataframe))))){
+    stop("One or more of the variables selected under vars do not match with the column names of data.frame used for the model.")
+  }
+
   regvars=names(dataframe)[2:length(names(dataframe))]
   base<-data.frame("Intercept"=1)
   for(var in regvars){
@@ -20,20 +24,20 @@ fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
         base<-cbind(base, add)
       }else{#A dummy variable with zeros and ones
         if(var%in%names(at)){#If a specific value is specified in at then use this value. Else use the reference category
-          base[,var]=at[var]  
+          base[,var]=at[var]
         }else{
           base[,var]=0
         }
       }
     }else{
       if(var%in%names(at)){#If a specific value is specified in at then use this value. Else use mean
-        base[,var]=at[var]  
+        base[,var]=at[var]
       }else{
         base[,var]=mean(dataframe[,var])
       }
     }
   }
-  
+
   #Test if interaction variables exist and if so create variables for them
   if(any(grepl(":", names(model$coefficients)))){
     for(var in names(model$coefficients)[grepl(":", names(model$coefficients))]){
@@ -54,7 +58,7 @@ fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
       }
     }
   }
-  
+
   if(is.null(vars)){#If the user does not specify which variables then all variables are used
     vars=regvars
   }
@@ -75,8 +79,16 @@ fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
     }
   }
 #Als de gebruiker een subset van de data gebruikt waardoor sommige levels van factors niet meer aanwezig zijn dan zorgen de volgende twee commandos ervoor dat alleen de juiste variabelen worden meegenomen.
-    vars<-vars[vars%in%names(model$coef)]
+  if(any(!(names(base) %in% c("Intercept", names(model$coef))))){
+    stop("Mismatching dimensions of variables present in the model and the data.frame supplied to the model. The most likely cause is that not all the levels defined in one or more of the factor variables are present in the data used for the logitmodel. Please use data = droplevels(yourdataframe) in the glm or speedglm command.")
+  }
+  vars<-vars[vars%in%names(model$coef)]
+
+
     base<-base[names(base)%in%c("Intercept",names(model$coef))]
+    if(!(conf.band>0&conf.band<1)){
+      stop("The bandwidth of the confidence interval should be between 0 and 1")
+    }
   fit=as.matrix(base)%*%model$coef
   Results<-data.frame("Variable" = vars, "ME" = 0, "Confupper" = 0, "Conflower" = 0, "p" = 0)
   for(var in vars){
@@ -105,7 +117,7 @@ fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
       }
       fit2=as.matrix(dybase)%*%model$coef
       Results$ME[Results$Variable==var]=exp(fit2)/(1+exp(fit2))-exp(fit)/(1+exp(fit))
-      
+
       SEbase<-dybase-base
       SEbase[SEbase<0]=0
       se=diag(sqrt(as.matrix(SEbase) %*% vcov(model) %*% t(as.matrix(SEbase))))
@@ -136,7 +148,7 @@ fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
         }
         fit2=as.matrix(dybase)%*%model$coef
         Results$ME[Results$Variable==var]=exp(fit2)/(1+exp(fit2))-exp(fit)/(1+exp(fit))
-        
+
         SEbase<-dybase-base
         SEbase[SEbase<0]=0
         se=diag(sqrt(as.matrix(SEbase) %*% vcov(model) %*% t(as.matrix(SEbase))))
@@ -167,7 +179,7 @@ fastlogitME<-function(model, at = NULL, vars = NULL, conf.band = .95){
         }
         fit2=as.matrix(dybase)%*%model$coef
         Results$ME[Results$Variable==var]=(exp(fit2)/(1+exp(fit2))-exp(fit)/(1+exp(fit)))/1e-7
-        
+
         SEbase<-dybase-base
         SEbase[SEbase<0]=0
         se=diag(sqrt(as.matrix(SEbase) %*% vcov(model) %*% t(as.matrix(SEbase))))
